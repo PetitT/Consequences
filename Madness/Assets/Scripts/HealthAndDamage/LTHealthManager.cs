@@ -21,6 +21,8 @@ namespace LowTeeGames
 
         public UnityEvent onDeath;
 
+        public static event Action onStaticDamageTaken;
+
         private void Awake()
         {
             ResetHealth();
@@ -37,6 +39,7 @@ namespace LowTeeGames
             currentHealth -= damage;
             currentHealth = Mathf.Max(currentHealth, 0);
             onDamageTaken?.Invoke(damage);
+            onStaticDamageTaken?.Invoke();
             onHealthChanged?.Invoke(currentHealth, maxHealth);
             if (currentHealth > 0) { return; }
             onDeath?.Invoke();

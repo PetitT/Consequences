@@ -11,9 +11,9 @@ namespace LowTeeGames
         [System.Serializable] public class OnDamageTakenEvent : UnityEvent<float> { }
         public OnDamageTakenEvent onDamageTaken;
 
-        private void OnTriggerEnter(Collider other)
+        private void OnTriggerEnter2D(Collider2D collision)
         {
-            if (!other.TryGetComponent(out LTDamageDealer damageDealer)) { return; }
+            if (!collision.TryGetComponent(out LTDamageDealer damageDealer)) { return; }
 
             float damage = damageDealer.damage;
             onDamageTaken?.Invoke(damage);
