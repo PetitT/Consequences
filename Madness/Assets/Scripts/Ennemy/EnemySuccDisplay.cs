@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class EnemySuccDisplay : MonoBehaviour
 {
     public Slider slider;
+    IEnumerator coroutine = null;
 
     private void Update()
     {
@@ -14,12 +15,13 @@ public class EnemySuccDisplay : MonoBehaviour
 
     public void StartSuccing(float succTime)
     {
-        StartCoroutine(Succ(succTime));
+        coroutine = Succ(succTime);
+        StartCoroutine(coroutine);
     }
 
     public void StopSuccing()
     {
-        StopCoroutine("Succ");
+        StopCoroutine(coroutine);
         slider.normalizedValue = 1;
     }
 

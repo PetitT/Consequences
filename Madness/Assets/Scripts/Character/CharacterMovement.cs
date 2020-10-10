@@ -67,6 +67,7 @@ public class CharacterMovement : MonoBehaviour
         currentTethers--;
         if (currentTethers <= 0)
         {
+            currentTethers = 0;
             anim.SetTrigger("StopCast");
         }
     }

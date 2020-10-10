@@ -8,6 +8,7 @@ public class ScreenShakeManager : LTSingleton<ScreenShakeManager>
 {
     public CinemachineVirtualCamera cam;
     private CinemachineBasicMultiChannelPerlin perlin;
+    private IEnumerator coroutine;
 
     public float maxShake;
 
@@ -18,12 +19,13 @@ public class ScreenShakeManager : LTSingleton<ScreenShakeManager>
 
     public void Shake(float shakeTime)
     {
-        StartCoroutine(Shakey(shakeTime));
+        coroutine = Shakey(shakeTime);
+        StartCoroutine(coroutine);
     }
 
     public void StopShake()
     {
-        StopCoroutine("Shakey");
+        StopCoroutine(coroutine);
         perlin.m_AmplitudeGain = 0;
     }
 

@@ -48,11 +48,15 @@ public class EnemyTether : MonoBehaviour
 
     public void StartTethering()
     {
+        if (isTethering) { return; }
         isTethering = true;
         remainingTetheringTime = SoulManager.Instance.CalculateTetherTime(baseTetherTime);
         ScreenShakeManager.Instance.Shake(remainingTetheringTime);
         GetComponent<EnemySuccDisplay>().StartSuccing(remainingTetheringTime);
-        GetComponent<EnemyBehaviour>().StartAttacking();
+        if (TryGetComponent(out EnemyBehaviour behaviour))
+        {
+            behaviour.StartAttacking();
+        }
         onTetherStart?.Invoke();
         onStaticTetherStart?.Invoke(transform);
     }
@@ -74,7 +78,8 @@ public class EnemyTether : MonoBehaviour
         {
             tetherLine.positionCount = 2;
             tetherLine.SetPosition(0, transform.position);
-            tetherLine.SetPosition(1, CharPosition.Instance.position);
+            tetherLine.SetPosition(1, CharPosition.Instance.handPosition);
+            tetherLine.material.SetTextureOffset("_MainTex", new Vector2(Time.time * -10, 0));
         }
         else
         {
@@ -102,7 +107,7 @@ public class EnemyTether : MonoBehaviour
 
     private IEnumerator BurstToPlayer()
     {
-        while(Vector2.Distance(transform.position, CharPosition.Instance.position) > 1)
+        while (Vector2.Distance(transform.position, CharPosition.Instance.handPosition) > 1)
         {
             transform.position = Vector2.MoveTowards(transform.position, CharPosition.Instance.position, 10 * Time.deltaTime);
             yield return null;

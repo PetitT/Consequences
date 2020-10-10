@@ -64,6 +64,7 @@ public class CharacterAttack : MonoBehaviour
                 Vector3 spawnPos = hit.point;
                 GameObject newProjectile = LTPool.Instance.GetItemFromPool(projectile, spawnPos, Quaternion.identity);
                 remainingAttacks--;
+                SpellCDDisplay.Instance.Display(attackCooldown);
             }
         }
     }

@@ -14,8 +14,11 @@ namespace LowTeeGames
         private void OnTriggerEnter2D(Collider2D collision)
         {
             if (!collision.TryGetComponent(out LTDamageDealer damageDealer)) { return; }
-
             float damage = damageDealer.damage;
+            if (collision.CompareTag("Projectile"))
+            {
+                collision.gameObject.SetActive(false);
+            }
             onDamageTaken?.Invoke(damage);
         }
     }

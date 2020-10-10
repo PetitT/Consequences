@@ -16,7 +16,14 @@ namespace LowTeeGames
         public OnModifyHealth onDamageTaken;
         public OnModifyHealth onHealthRegained;
 
-        [System.Serializable] public class OnHealthChanged : UnityEvent<float, float> { }
+        [System.Serializable]
+        public class OnHealthChanged : UnityEvent<float, float>
+        {
+            internal void AddListener()
+            {
+                throw new NotImplementedException();
+            }
+        }
         public OnHealthChanged onHealthChanged;
 
         public UnityEvent onDeath;
@@ -41,6 +48,7 @@ namespace LowTeeGames
             onDamageTaken?.Invoke(damage);
             onStaticDamageTaken?.Invoke();
             onHealthChanged?.Invoke(currentHealth, maxHealth);
+            Debug.Log(currentHealth + " " + maxHealth);
             if (currentHealth > 0) { return; }
             onDeath?.Invoke();
         }
