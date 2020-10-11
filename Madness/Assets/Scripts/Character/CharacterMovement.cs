@@ -40,6 +40,8 @@ public class CharacterMovement : MonoBehaviour
 
     private Transform currentTarget;
 
+    public AudioSource src;
+
     private void Start()
     {
         currentMoveSpeed = baseMoveSpeed;
@@ -57,6 +59,10 @@ public class CharacterMovement : MonoBehaviour
 
     private void TetherStartHandler(Transform target)
     {
+        if (!src.isPlaying)
+        {
+            src.Play();
+        }
         currentTarget = target;
         currentTethers++;
         anim.SetTrigger("StartCast");
@@ -67,6 +73,7 @@ public class CharacterMovement : MonoBehaviour
         currentTethers--;
         if (currentTethers <= 0)
         {
+            src.Stop();
             currentTethers = 0;
             anim.SetTrigger("StopCast");
         }

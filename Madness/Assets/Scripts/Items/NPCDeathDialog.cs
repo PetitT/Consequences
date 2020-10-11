@@ -15,6 +15,11 @@ public class NPCDeathDialog : MonoBehaviour
         StartCoroutine(WriteText());
     }
 
+    private void Update()
+    {
+        tmp.transform.rotation = Quaternion.Euler(0, 0, 0);
+    }
+
     public IEnumerator WriteText()
     {
         char[] charArray = textToWrite.ToCharArray();

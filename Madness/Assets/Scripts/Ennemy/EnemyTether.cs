@@ -16,17 +16,24 @@ public class EnemyTether : MonoBehaviour
     private float remainingTetheringTime;
 
     public UnityEvent onTetherStart;
+    public UnityEvent onTetherEnd;
     public UnityEvent onDeath;
 
     public static event Action<Transform> onStaticTetherStart;
     public static event Action onStaticTetherEnd;
+    public static event Action<bool> onStaticKill;
 
     private bool isDying = false;
+
+    public bool heals = false;
+
+    private AudioSource src;
 
     private void Start()
     {
         LTHealthManager.onStaticDamageTaken += Stop;
         SoulManager.Instance.AddToMaxSouls(soulValue);
+        src = GetComponent<AudioSource>();
     }
 
     private void OnDestroy()
@@ -111,9 +118,12 @@ public class EnemyTether : MonoBehaviour
         {
             damageDealer.gameObject.SetActive(false);
         }
-        GetComponent<EnemyBehaviour>().enabled = false;
-
+        if (TryGetComponent(out EnemyBehaviour behaviour))
+        {
+            behaviour.enabled = false;
+        }
         float currentScale = 1;
+        src?.Play();
         while (Vector2.Distance(transform.position, CharPosition.Instance.handPosition) > 1)
         {
             transform.position = Vector2.MoveTowards(transform.position, CharPosition.Instance.position, 20 * Time.deltaTime);
@@ -126,6 +136,7 @@ public class EnemyTether : MonoBehaviour
             yield return null;
         }
         onDeath?.Invoke();
+        onStaticKill?.Invoke(heals);
         gameObject.SetActive(false);
     }
 }

@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class NPCManager : LTSingleton<NPCManager>
 {
@@ -12,13 +13,14 @@ public class NPCManager : LTSingleton<NPCManager>
     public float NPCDeathThreshold;
 
     public static event Action onNPCBecomeAgressive;
+    public UnityEvent onGoodEnding;
+    public UnityEvent onBadEnding;
 
     public void AddNPC()
     {
         numberOfNPC++;
     }
 
-    [ContextMenu("Remove")]
     public void RemoveNPC()
     {
         deadNPC++;
@@ -26,6 +28,18 @@ public class NPCManager : LTSingleton<NPCManager>
         if(percent >= NPCDeathThreshold)
         {
             onNPCBecomeAgressive.Invoke();
+        }
+    }
+
+    public void TriggerFinalBossEvent()
+    {
+        if(deadNPC == 0)
+        {
+            onGoodEnding?.Invoke();
+        }
+        else
+        {
+            onBadEnding?.Invoke();
         }
     }
 }

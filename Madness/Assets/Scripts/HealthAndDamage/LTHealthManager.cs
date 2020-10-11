@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 
 namespace LowTeeGames
 {
@@ -19,6 +20,11 @@ namespace LowTeeGames
         [System.Serializable] public class OnModifyHealth : UnityEvent<float> { }
         public OnModifyHealth onDamageTaken;
         public OnModifyHealth onHealthRegained;
+
+        private AudioSource src;
+        public AudioClip damaged;
+
+        public ParticleSystem particle;
 
         [System.Serializable]
         public class OnHealthChanged : UnityEvent<float, float>
@@ -37,6 +43,21 @@ namespace LowTeeGames
         private void Awake()
         {
             ResetHealth();
+            src = GetComponent<AudioSource>();
+        }
+
+        private void Start()
+        {
+            EnemyTether.onStaticKill += GetHealth;
+        }
+
+        private void GetHealth(bool heals)
+        {
+            particle.Play();
+            if (heals)
+            {
+                RegenerateHealth(1);
+            }
         }
 
         private void ResetHealth()
@@ -53,10 +74,17 @@ namespace LowTeeGames
             onDamageTaken?.Invoke(damage);
             onStaticDamageTaken?.Invoke();
             onHealthChanged?.Invoke(currentHealth, maxHealth);
-            Debug.Log(currentHealth + " " + maxHealth);
             StartCoroutine("Flash");
+            src.PlayOneShot(damaged);
             if (currentHealth > 0) { return; }
             onDeath?.Invoke();
+            StartCoroutine("ResetGame");
+        }
+
+        private IEnumerator ResetGame()
+        {
+            yield return new WaitForSeconds(1.75f);
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
 
         public void RegenerateHealth(float health)

@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class SoulManager : LTSingleton<SoulManager>
 {
@@ -13,6 +14,11 @@ public class SoulManager : LTSingleton<SoulManager>
     public float percentageDivisionBuff = 2;
 
     public TextMeshProUGUI text;
+
+    [Header("Events")]
+    public int doorSoulsThreshold;
+    public UnityEvent onDoorSoulsGot;
+    private bool hasLaunchedDoorEvent;
 
     public void AddToMaxSouls(int souls)
     {
@@ -24,6 +30,7 @@ public class SoulManager : LTSingleton<SoulManager>
     {
         currentSouls += souls;
         ResetDisplay();
+        //CheckDoor();
     }
 
     private void ResetDisplay()
@@ -37,5 +44,15 @@ public class SoulManager : LTSingleton<SoulManager>
         float divided = percentOfSouls / percentageDivisionBuff;
         float time = baseTetherTime - (baseTetherTime / 100 * divided);
         return time;
+    }
+
+    private void CheckDoor()
+    {
+        if (hasLaunchedDoorEvent) { return; }
+        if(currentSouls >= doorSoulsThreshold)
+        {
+            onDoorSoulsGot?.Invoke();
+            hasLaunchedDoorEvent = true;
+        }
     }
 }

@@ -45,4 +45,10 @@ public class NPCDialog : MonoBehaviour
         yield return new WaitForSeconds(waitTime);
         tmp.enabled = false;
     }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireSphere(transform.position, displayRange);
+    }
 }
