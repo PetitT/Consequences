@@ -9,6 +9,10 @@ namespace LowTeeGames
     [AddComponentMenu("LowTee/Health Manager")]
     public class LTHealthManager : MonoBehaviour
     {
+        public SpriteRenderer sprite;
+        private bool isInvulnerable = false;
+        public float invulnerabilityTimer = 1f;
+
         [SerializeField] private float maxHealth;
         private float currentHealth;
 
@@ -43,12 +47,14 @@ namespace LowTeeGames
 
         public void TakeDamage(float damage)
         {
+            if (isInvulnerable) { return; }
             currentHealth -= damage;
             currentHealth = Mathf.Max(currentHealth, 0);
             onDamageTaken?.Invoke(damage);
             onStaticDamageTaken?.Invoke();
             onHealthChanged?.Invoke(currentHealth, maxHealth);
             Debug.Log(currentHealth + " " + maxHealth);
+            StartCoroutine("Flash");
             if (currentHealth > 0) { return; }
             onDeath?.Invoke();
         }
@@ -75,6 +81,16 @@ namespace LowTeeGames
             float surplus = currentHealth - maxHealth;
             if (surplus > 0) { TakeDamage(surplus); }
             onHealthChanged?.Invoke(currentHealth, maxHealth);
+        }
+
+        private IEnumerator Flash()
+        {
+            isInvulnerable = true;
+            sprite.material.SetFloat("_HitEffectBlend", 1);
+            yield return new WaitForSeconds(0.1f);
+            sprite.material.SetFloat("_HitEffectBlend", 0);
+            yield return new WaitForSeconds(0.75f);
+            isInvulnerable = false;
         }
     }
 }

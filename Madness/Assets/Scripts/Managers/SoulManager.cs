@@ -1,6 +1,8 @@
 ﻿using LowTeeGames;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class SoulManager : LTSingleton<SoulManager>
@@ -10,14 +12,23 @@ public class SoulManager : LTSingleton<SoulManager>
 
     public float percentageDivisionBuff = 2;
 
+    public TextMeshProUGUI text;
+
     public void AddToMaxSouls(int souls)
     {
         maxSouls += souls;
+        ResetDisplay();
     }
 
     public void AddCurrentSouls(int souls)
     {
         currentSouls += souls;
+        ResetDisplay();
+    }
+
+    private void ResetDisplay()
+    {
+        text.text = currentSouls.ToString() + " / " + maxSouls.ToString();
     }
 
     public float CalculateTetherTime(float baseTetherTime)

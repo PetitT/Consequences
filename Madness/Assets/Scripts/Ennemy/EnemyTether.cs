@@ -107,9 +107,22 @@ public class EnemyTether : MonoBehaviour
 
     private IEnumerator BurstToPlayer()
     {
+        if (gameObject.TryGetComponentInChildren(out LTDamageDealer damageDealer))
+        {
+            damageDealer.gameObject.SetActive(false);
+        }
+        GetComponent<EnemyBehaviour>().enabled = false;
+
+        float currentScale = 1;
         while (Vector2.Distance(transform.position, CharPosition.Instance.handPosition) > 1)
         {
-            transform.position = Vector2.MoveTowards(transform.position, CharPosition.Instance.position, 10 * Time.deltaTime);
+            transform.position = Vector2.MoveTowards(transform.position, CharPosition.Instance.position, 20 * Time.deltaTime);
+            currentScale -= Time.deltaTime;
+            transform.localScale = new Vector2(currentScale, currentScale);
+
+            tetherLine.SetPosition(0, transform.position);
+            tetherLine.SetPosition(1, CharPosition.Instance.handPosition);
+            tetherLine.material.SetTextureOffset("_MainTex", new Vector2(Time.time * -10, 0));
             yield return null;
         }
         onDeath?.Invoke();
