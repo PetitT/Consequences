@@ -11,7 +11,8 @@ public class NPCDialog : MonoBehaviour
     public LayerMask playerLayer;
     public float timeBetweenLetters;
     public float waitTime;
-    public string textToWrite;
+    public string FRtextToWrite;
+    public string EntextToWrite;
 
     private bool hasDisplayed = false;
 
@@ -34,7 +35,8 @@ public class NPCDialog : MonoBehaviour
 
     public IEnumerator WriteText()
     {
-        char[] charArray = textToWrite.ToCharArray();
+        Language currentLanguage = LanguageSelect.Instance.currentLanguage;
+        char[] charArray = currentLanguage == Language.FR ? FRtextToWrite.ToCharArray() : EntextToWrite.ToCharArray();
         string completeText = "";
         for (int i = 0; i < charArray.Length; i++)
         {

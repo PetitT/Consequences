@@ -7,7 +7,8 @@ using UnityEngine.SceneManagement;
 public class EndGame : MonoBehaviour
 {
     public TextMeshProUGUI tmp;
-    public string text;
+    public string FRtext;
+    public string ENtext;
     public float timeBetweenLetters;
     public float waitTime;
     void Start()
@@ -17,7 +18,8 @@ public class EndGame : MonoBehaviour
 
     private IEnumerator Write()
     {
-        char[] charArray1 = text.ToCharArray();
+        Language currentLanguage = LanguageSelect.Instance.currentLanguage;
+        char[] charArray1 =  currentLanguage == Language.FR? FRtext.ToCharArray() : ENtext.ToCharArray();
 
         string completeText = "";
         for (int i = 0; i < charArray1.Length; i++)

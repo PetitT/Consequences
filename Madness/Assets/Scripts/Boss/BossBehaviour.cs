@@ -19,7 +19,13 @@ public class BossBehaviour : MonoBehaviour
     public float timeAfterRain;
     public float timeAfterCarpet;
 
-    private bool canAttack = true;
+    private bool canAttack = false;
+
+    private IEnumerator Start()
+    {
+        yield return new WaitForSeconds(3);
+        canAttack = true;
+    }
 
     private void Update()
     {
@@ -68,11 +74,11 @@ public class BossBehaviour : MonoBehaviour
     private IEnumerator MoveFireCarpet()
     {
         int random = UnityEngine.Random.Range(0, 2);
-        if (random == 1)
+        if (random == 0)
         {
             GameObject newProjectile = LTPool.Instance.GetItemFromPool(fireCarpetRight, carpetRightPos.position, Quaternion.identity);
         }
-        if (random == 2)
+        if (random == 1)
         {
             GameObject newProjectile = LTPool.Instance.GetItemFromPool(fireCarpetLeft, carpetLeftPos.position, Quaternion.identity);
         }

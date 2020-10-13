@@ -47,6 +47,7 @@ public class CharacterAttack : MonoBehaviour
 
             if (remainingCooldown <= 0)
             {
+                PentacleDisplay.Instance.ToggleSprite(true);
                 remainingAttacks++;
                 remainingCooldown = attackCooldown;
             }
@@ -57,6 +58,7 @@ public class CharacterAttack : MonoBehaviour
     {
         if (remainingAttacks > 0)
         {
+            PentacleDisplay.Instance.ToggleSprite(false);
             Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             RaycastHit2D hit = Physics2D.Raycast(mousePos, Vector2.down, Mathf.Infinity, groundLayer);
             if (hit.collider != null)

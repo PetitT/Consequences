@@ -24,6 +24,7 @@ public class CharacterMovement : MonoBehaviour
     [Header("Body")]
     public GameObject body;
     public Animator anim;
+    public SpriteRenderer sprite;
 
     [Header("Walls")]
     public LayerMask wallMask;
@@ -41,6 +42,8 @@ public class CharacterMovement : MonoBehaviour
     private Transform currentTarget;
 
     public AudioSource src;
+
+    private bool movingRight;
 
     private void Start()
     {
@@ -95,12 +98,12 @@ public class CharacterMovement : MonoBehaviour
             if (X > 0)
             {
                 anim.SetBool("IsMoving", true);
-                body.transform.rotation = new Quaternion(0, 0, 0, 0);
+                sprite.flipX = false;
             }
             else if (X < 0)
             {
                 anim.SetBool("IsMoving", true);
-                body.transform.rotation = new Quaternion(0, 180, 0, 0);
+                sprite.flipX = true;
             }
             else
             {
@@ -113,13 +116,22 @@ public class CharacterMovement : MonoBehaviour
             {
                 if (currentTarget.position.x > transform.position.x)
                 {
-                    body.transform.rotation = Quaternion.Euler(0, 0, 0);
+                    sprite.flipX = false;
                 }
                 else
                 {
-                    body.transform.rotation = Quaternion.Euler(0, 180, 0);
+                    sprite.flipX = true;
                 }
             }
+        }
+
+        if(X > 0)
+        {
+            movingRight = true;
+        }
+        if(X < 0)
+        {
+            movingRight = false;
         }
 
         if (!CheckWalls()) { return; }
@@ -175,7 +187,9 @@ public class CharacterMovement : MonoBehaviour
     {
         foreach (var check in wallChecks)
         {
-            if (Physics2D.Raycast(check.transform.position, body.transform.right, wallCheckRange, wallMask))
+            Vector2 checkDirection = movingRight == true ? Vector2.right : Vector2.left;
+            Debug.DrawRay(check.transform.position, checkDirection);
+            if (Physics2D.Raycast(check.transform.position, checkDirection, wallCheckRange, wallMask))
             {
                 return false;
             }

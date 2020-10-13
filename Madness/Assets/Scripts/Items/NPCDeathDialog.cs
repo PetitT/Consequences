@@ -8,7 +8,8 @@ public class NPCDeathDialog : MonoBehaviour
     public TextMeshPro tmp;
     public float timeBetweenLetters;
     public float waitTime;
-    public string textToWrite;
+    public string FRtextToWrite;
+    public string ENtextToWrite;
 
     public void Write()
     {
@@ -22,7 +23,9 @@ public class NPCDeathDialog : MonoBehaviour
 
     public IEnumerator WriteText()
     {
-        char[] charArray = textToWrite.ToCharArray();
+        Language currentLanguage = LanguageSelect.Instance.currentLanguage;
+
+        char[] charArray = currentLanguage == Language.FR ? FRtextToWrite.ToCharArray() : ENtextToWrite.ToCharArray();
         string completeText = "";
         for (int i = 0; i < charArray.Length; i++)
         {
